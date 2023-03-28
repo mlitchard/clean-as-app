@@ -73,7 +73,7 @@
           name = "serve-clean-as-app";
           runtimeInputs = [ pkgs.simple-http-server ];
           text =
-            "simple-http-server --ip 127.0.0.1 -p 8080 --nocache -i -- dist";
+            "simple-http-server --ip 0.0.0.0 -p 8080 --nocache -i -- dist";
         };
       in {
         apps = {
