@@ -63,30 +63,27 @@
           dir = ./.;
         };
 
-        bundle = pkgs.writeShellApplication {
-          name = "bundle-clean-as-app";
-          runtimeInputs = [ pkgs.nodejs ];
-          text = "npm run bundle";
-        };
-
         serve = pkgs.writeShellApplication {
           name = "serve-clean-as-app";
           runtimeInputs = [ pkgs.simple-http-server ];
           text =
             "simple-http-server --ip 0.0.0.0 -p 8080 --nocache -i -- dist";
         };
-      in {
-        apps = {
-          "bundle" = utils.lib.mkApp { drv = bundle; };
-          "serve" = utils.lib.mkApp { drv = serve; };
-        };
-
+      in 
+      rec 
+      { 
+        packages =
+             with ps;
+             { default = app { name = "hello"; };
+               bundle = bundle {};
+               output = output {};
+             };
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             entr
             nodejs
             nodePackages.purs-tidy
-            (ps.command { })
+            (ps.command {bundle.esbuild.format = "iife";})
             ps-tools.for-0_15.purescript-language-server
             purs-nix.esbuild
             purs-nix.purescript
